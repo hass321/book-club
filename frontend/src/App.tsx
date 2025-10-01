@@ -28,12 +28,12 @@ const App = () => {
   }, [booksLoaded, authorsLoaded]);
 
   const handleBookCreated = (newBook: any) => {
-    setBooks(prev => [...prev, newBook]);
+    setBooks(prev => [newBook, ...prev]);
     setListTab('book');
   };
 
   const handleAuthorCreated = (newAuthor: any) => {
-    setAuthors(prev => [...prev, newAuthor]);
+    setAuthors(prev => [newAuthor, ...prev]);
     setListTab('author');
   };
 

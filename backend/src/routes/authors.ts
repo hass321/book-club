@@ -9,8 +9,20 @@ const authorSchema = z.object({
 });
 
 export async function authorRoutes(app: FastifyInstance) {
-  app.get('/', async () => {
-    return prisma.author.findMany();
+  app.get('/', async (req) => {
+    const search = (req.query as any).search?.toString().trim();
+    if (search) {
+      return prisma.author.findMany({
+        where: {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { bio: { contains: search, mode: 'insensitive' } },
+          ],
+        },
+        orderBy: { created_at: 'desc' },
+      });
+    }
+    return prisma.author.findMany({ orderBy: { created_at: 'desc' } });
   });
 
   app.get('/:id', async (req, res) => {

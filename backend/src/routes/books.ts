@@ -11,8 +11,20 @@ const bookSchema = z.object({
 });
 
 export async function bookRoutes(app: FastifyInstance) {
-  app.get('/', async () => {
-    return prisma.book.findMany();
+  app.get('/', async (req) => {
+    const search = (req.query as any).search?.toString().trim();
+    if (search) {
+      return prisma.book.findMany({
+        where: {
+          OR: [
+            { title: { contains: search, mode: 'insensitive' } },
+            { description: { contains: search, mode: 'insensitive' } },
+          ],
+        },
+        orderBy: { created_at: 'desc' },
+      });
+    }
+    return prisma.book.findMany({ orderBy: { created_at: 'desc' } });
   });
 
   app.get('/:id', async (req, res) => {
