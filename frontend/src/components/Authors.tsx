@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-export function Authors() {
-  const [authors, setAuthors] = useState<Array<{id:number,name:string,bio?:string}>>([]);
+export function Authors({ authors, setAuthors }: { authors: any[]; setAuthors: (a: any[]) => void }) {
   const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setLoading(false);
+  }, [authors]);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [confirmId, setConfirmId] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetch('/authors')
-      .then(res => res.json())
-      .then(setAuthors)
-      .catch(() => setError('Failed to load authors'))
-      .finally(() => setLoading(false));
-  }, []);
 
   const handleDelete = async (id: number) => {
     setDeletingId(id);
@@ -55,26 +49,26 @@ export function Authors() {
               >
                 {deletingId === a.id ? 'Deleting...' : 'Delete'}
               </button>
-      {confirmId !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm mx-auto text-center">
-            <h3 className="text-lg font-bold mb-2 text-purple-700">Confirm Delete</h3>
-            <p className="mb-4 text-gray-600">Are you sure you want to delete this author?</p>
-            <div className="flex gap-4 justify-center">
-              <button
-                className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300"
-                onClick={() => setConfirmId(null)}
-                disabled={deletingId === confirmId}
-              >Cancel</button>
-              <button
-                className="px-4 py-2 rounded bg-red-500 text-white font-semibold hover:bg-red-600"
-                onClick={() => handleDelete(confirmId!)}
-                disabled={deletingId === confirmId}
-              >{deletingId === confirmId ? 'Deleting...' : 'Delete'}</button>
-            </div>
-          </div>
-        </div>
-      )}
+              {confirmId !== null && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                  <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm mx-auto text-center">
+                    <h3 className="text-lg font-bold mb-2 text-purple-700">Confirm Delete</h3>
+                    <p className="mb-4 text-gray-600">Are you sure you want to delete this author?</p>
+                    <div className="flex gap-4 justify-center">
+                      <button
+                        className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300"
+                        onClick={() => setConfirmId(null)}
+                        disabled={deletingId === confirmId}
+                      >Cancel</button>
+                      <button
+                        className="px-4 py-2 rounded bg-red-500 text-white font-semibold hover:bg-red-600"
+                        onClick={() => handleDelete(confirmId!)}
+                        disabled={deletingId === confirmId}
+                      >{deletingId === confirmId ? 'Deleting...' : 'Delete'}</button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </li>
           ))}
         </ul>

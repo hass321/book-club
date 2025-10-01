@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-export function Books() {
-  const [books, setBooks] = useState<any[]>([]);
+export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) => void }) {
   const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setLoading(false);
+  }, [books]);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [confirmId, setConfirmId] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetch('/books')
-      .then(res => res.json())
-      .then(setBooks)
-      .catch(() => setError('Failed to load books'))
-      .finally(() => setLoading(false));
-  }, []);
 
   const handleDelete = async (id: number) => {
     setDeletingId(id);
@@ -56,26 +50,26 @@ export function Books() {
               >
                 {deletingId === b.id ? 'Deleting...' : 'Delete'}
               </button>
-      {confirmId !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm mx-auto text-center">
-            <h3 className="text-lg font-bold mb-2 text-purple-700">Confirm Delete</h3>
-            <p className="mb-4 text-gray-600">Are you sure you want to delete this book?</p>
-            <div className="flex gap-4 justify-center">
-              <button
-                className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300"
-                onClick={() => setConfirmId(null)}
-                disabled={deletingId === confirmId}
-              >Cancel</button>
-              <button
-                className="px-4 py-2 rounded bg-red-500 text-white font-semibold hover:bg-red-600"
-                onClick={() => handleDelete(confirmId!)}
-                disabled={deletingId === confirmId}
-              >{deletingId === confirmId ? 'Deleting...' : 'Delete'}</button>
-            </div>
-          </div>
-        </div>
-      )}
+              {confirmId !== null && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                  <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm mx-auto text-center">
+                    <h3 className="text-lg font-bold mb-2 text-purple-700">Confirm Delete</h3>
+                    <p className="mb-4 text-gray-600">Are you sure you want to delete this book?</p>
+                    <div className="flex gap-4 justify-center">
+                      <button
+                        className="px-4 py-2 rounded bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300"
+                        onClick={() => setConfirmId(null)}
+                        disabled={deletingId === confirmId}
+                      >Cancel</button>
+                      <button
+                        className="px-4 py-2 rounded bg-red-500 text-white font-semibold hover:bg-red-600"
+                        onClick={() => handleDelete(confirmId!)}
+                        disabled={deletingId === confirmId}
+                      >{deletingId === confirmId ? 'Deleting...' : 'Delete'}</button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </li>
           ))}
         </ul>

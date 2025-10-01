@@ -1,4 +1,4 @@
-import React, { useState, FC } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Authors } from './components/Authors';
 import { Books } from './components/Books';
 import { BookForm } from './components/BookForm';
@@ -7,6 +7,36 @@ import { AuthorForm } from './components/AuthorForm';
 const App = () => {
   const [tab, setTab] = useState<'book' | 'author'>('book');
   const [listTab, setListTab] = useState<'book' | 'author'>('book');
+  const [books, setBooks] = useState<any[]>([]);
+  const [booksLoaded, setBooksLoaded] = useState(false);
+  const [authors, setAuthors] = useState<any[]>([]);
+  const [authorsLoaded, setAuthorsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!booksLoaded) {
+      fetch('/books')
+        .then(res => res.json())
+        .then(setBooks)
+        .finally(() => setBooksLoaded(true));
+    }
+    if (!authorsLoaded) {
+      fetch('/authors')
+        .then(res => res.json())
+        .then(setAuthors)
+        .finally(() => setAuthorsLoaded(true));
+    }
+  }, [booksLoaded, authorsLoaded]);
+
+  const handleBookCreated = (newBook: any) => {
+    setBooks(prev => [...prev, newBook]);
+    setListTab('book');
+  };
+
+  const handleAuthorCreated = (newAuthor: any) => {
+    setAuthors(prev => [...prev, newAuthor]);
+    setListTab('author');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 flex flex-col items-center px-2 py-4">
       <header className="w-full mb-8">
@@ -36,10 +66,10 @@ const App = () => {
             </div>
             <div className="bg-white rounded-b-lg shadow p-6 transition-all duration-300" style={{ minHeight: '200px' }}>
               <div className={`transition-opacity duration-300 ${listTab === 'book' ? 'opacity-100' : 'opacity-0 absolute pointer-events-none'}`}>
-                {listTab === 'book' && <Books />}
+                {listTab === 'book' && <Books books={books} setBooks={setBooks} />}
               </div>
               <div className={`transition-opacity duration-300 ${listTab === 'author' ? 'opacity-100' : 'opacity-0 absolute pointer-events-none'}`}>
-                {listTab === 'author' && <Authors />}
+                {listTab === 'author' && <Authors authors={authors} setAuthors={setAuthors} />}
               </div>
             </div>
           </section>
@@ -59,7 +89,7 @@ const App = () => {
               </button>
             </div>
             <div className="bg-white rounded-b-lg shadow p-6">
-              {tab === 'book' ? <BookForm onCreated={() => {}} /> : <AuthorForm onCreated={() => {}} />}
+              {tab === 'book' ? <BookForm onCreated={handleBookCreated} /> : <AuthorForm onCreated={handleAuthorCreated} />}
             </div>
           </section>
         </div>

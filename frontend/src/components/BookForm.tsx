@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { YearPicker } from './YearPicker';
 
 function Spinner() {
@@ -15,6 +15,18 @@ export function BookForm({ onCreated }: { onCreated: (b: any) => void }) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [authors, setAuthors] = useState<Array<{id:number,name:string}>>([]);
+  const [authorsLoading, setAuthorsLoading] = useState(true);
+  const [authorsError, setAuthorsError] = useState<string|null>(null);
+
+  useEffect(() => {
+    setAuthorsLoading(true);
+    fetch('/authors')
+      .then(res => res.json())
+      .then(setAuthors)
+      .catch(() => setAuthorsError('Failed to load authors'))
+      .finally(() => setAuthorsLoading(false));
+  }, []);
 
   const isTitleInvalid = submitted && title.trim() === '';
   const isAuthorIdInvalid = submitted && authorId.trim() === '';
@@ -24,7 +36,7 @@ export function BookForm({ onCreated }: { onCreated: (b: any) => void }) {
     setSubmitted(true);
 
     if (isTitleInvalid || isAuthorIdInvalid) {
-      setError('Title and Author ID are required');
+      setError('Title and Author Name are required');
       return;
     }
 
@@ -82,16 +94,24 @@ export function BookForm({ onCreated }: { onCreated: (b: any) => void }) {
 
       <div className="flex flex-col gap-2">
         <label className="font-medium text-gray-700">
-          Author ID<span className="text-red-500">*</span>
+          Author Name<span className="text-red-500">*</span>
         </label>
-        <input
-          className={`border p-2 rounded focus:ring-2 focus:ring-purple-400 ${
-            isAuthorIdInvalid ? 'border-red-500' : 'border-gray-300'
-          }`}
-          placeholder="Author ID"
-          value={authorId}
-          onChange={e => setAuthorId(e.target.value)}
-        />
+        {authorsLoading ? (
+          <div className="text-gray-500 text-sm">Loading authors...</div>
+        ) : authorsError ? (
+          <div className="text-red-500 text-sm">{authorsError}</div>
+        ) : (
+          <select
+            className={`border p-2 rounded focus:ring-2 focus:ring-purple-400 ${isAuthorIdInvalid ? 'border-red-500' : 'border-gray-300'}`}
+            value={authorId}
+            onChange={e => setAuthorId(e.target.value)}
+          >
+            <option value="">Select author</option>
+            {authors.map(a => (
+              <option key={a.id} value={a.id}>{a.name}</option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">
