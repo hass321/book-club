@@ -42,42 +42,56 @@ export function BookForm({ onCreated }: { onCreated: (b: any) => void }) {
   };
 
   return (
-    <form className="mb-4" onSubmit={handleSubmit}>
-      <input
-        className="border p-2 mr-2"
-        placeholder="Title"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        required
-      />
-      <input
-        className="border p-2 mr-2"
-        placeholder="Author ID"
-        value={authorId}
-        onChange={e => setAuthorId(e.target.value)}
-        required
-      />
-      <input
-        className="border p-2 mr-2"
-        placeholder="Description"
-        value={description}
-        onChange={e => setDescription(e.target.value)}
-      />
-      <input
-        className="border p-2 mr-2"
-        placeholder="Published Year"
-        value={publishedYear}
-        onChange={e => setPublishedYear(e.target.value)}
-        type="number"
-      />
-      <button
-        className="bg-green-500 text-white px-4 py-2 rounded"
-        type="submit"
-        disabled={loading}
-      >
-        {loading ? 'Creating...' : 'Add Book'}
-      </button>
-      {error && <div className="text-red-500 mt-2">{error}</div>}
+    <form className="mb-4 w-full max-w-md mx-auto flex flex-col gap-4" onSubmit={handleSubmit}>
+      <div className="flex flex-col gap-2">
+        <label className="font-medium text-gray-700">Title</label>
+        <input
+          className="border p-2 rounded focus:ring-2 focus:ring-purple-400"
+          placeholder="Title"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          required
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label className="font-medium text-gray-700">Author ID</label>
+        <input
+          className="border p-2 rounded focus:ring-2 focus:ring-purple-400"
+          placeholder="Author ID"
+          value={authorId}
+          onChange={e => setAuthorId(e.target.value)}
+          required
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label className="font-medium text-gray-700">Description</label>
+        <input
+          className="border p-2 rounded focus:ring-2 focus:ring-purple-400"
+          placeholder="Description"
+          value={description}
+          onChange={e => setDescription(e.target.value)}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label className="font-medium text-gray-700">Published Year</label>
+        <input
+          className="border p-2 rounded focus:ring-2 focus:ring-purple-400"
+          placeholder="Published Year"
+          value={publishedYear}
+          onChange={e => setPublishedYear(e.target.value)}
+          type="number"
+        />
+      </div>
+      <div className="flex justify-center mt-4">
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded font-semibold shadow transition-all duration-150 w-full max-w-xs"
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? 'Creating...' : 'Add Book'}
+        </button>
+      </div>
+      {error && <div className="text-red-500 mt-2 text-center">{error}</div>}
     </form>
   );
 }

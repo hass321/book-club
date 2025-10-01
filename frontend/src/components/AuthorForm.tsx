@@ -33,28 +33,36 @@ export function AuthorForm({ onCreated }: { onCreated: (a: any) => void }) {
   };
 
   return (
-    <form className="mb-4" onSubmit={handleSubmit}>
-      <input
-        className="border p-2 mr-2"
-        placeholder="Name"
-        value={name}
-        onChange={e => setName(e.target.value)}
-        required
-      />
-      <input
-        className="border p-2 mr-2"
-        placeholder="Bio"
-        value={bio}
-        onChange={e => setBio(e.target.value)}
-      />
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-        type="submit"
-        disabled={loading}
-      >
-        {loading ? 'Creating...' : 'Add Author'}
-      </button>
-      {error && <div className="text-red-500 mt-2">{error}</div>}
+    <form className="mb-4 w-full max-w-md mx-auto flex flex-col gap-4" onSubmit={handleSubmit}>
+      <div className="flex flex-col gap-2">
+        <label className="font-medium text-gray-700">Name</label>
+        <input
+          className="border p-2 rounded focus:ring-2 focus:ring-purple-400"
+          placeholder="Name"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          required
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label className="font-medium text-gray-700">Bio</label>
+        <input
+          className="border p-2 rounded focus:ring-2 focus:ring-purple-400"
+          placeholder="Bio"
+          value={bio}
+          onChange={e => setBio(e.target.value)}
+        />
+      </div>
+      <div className="flex justify-center mt-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded font-semibold shadow transition-all duration-150 w-full max-w-xs"
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? 'Creating...' : 'Add Author'}
+        </button>
+      </div>
+      {error && <div className="text-red-500 mt-2 text-center">{error}</div>}
     </form>
   );
 }

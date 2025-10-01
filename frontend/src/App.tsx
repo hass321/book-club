@@ -1,15 +1,71 @@
-import React from 'react';
+import React, { useState, FC } from 'react';
 import { Authors } from './components/Authors';
 import { Books } from './components/Books';
+import { BookForm } from './components/BookForm';
+import { AuthorForm } from './components/AuthorForm';
 
-export default function App() {
+const App = () => {
+  const [tab, setTab] = useState<'book' | 'author'>('book');
+  const [listTab, setListTab] = useState<'book' | 'author'>('book');
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <h1 className="text-2xl font-bold mb-4">Book Club</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Authors />
-        <Books />
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 flex flex-col items-center px-2 py-4">
+      <header className="w-full mb-8">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-4xl font-extrabold text-center text-purple-700 drop-shadow mb-2">Book Club</h1>
+          <p className="text-center text-gray-500">A modern, responsive book club app</p>
+        </div>
+      </header>
+      <main className="w-full max-w-5xl mx-auto">
+        <div className="flex flex-col md:flex-row gap-8">
+          <section className="flex-1 mb-8 md:mb-0">
+            <div className="flex justify-center mb-4">
+              <button
+                className={`px-6 py-2 rounded-t-lg font-semibold transition-all duration-300 focus:outline-none hover:bg-purple-700 hover:text-white ${listTab === 'book' ? 'bg-purple-600 text-white shadow-lg' : 'bg-white text-purple-600 border-b-2 border-purple-600'}`}
+                style={{ transition: 'background 0.3s, color 0.3s' }}
+                onClick={() => setListTab('book')}
+              >
+                Books List
+              </button>
+              <button
+                className={`px-6 py-2 rounded-t-lg font-semibold transition-all duration-300 focus:outline-none hover:bg-purple-700 hover:text-white ${listTab === 'author' ? 'bg-purple-600 text-white shadow-lg' : 'bg-white text-purple-600 border-b-2 border-purple-600'}`}
+                style={{ transition: 'background 0.3s, color 0.3s' }}
+                onClick={() => setListTab('author')}
+              >
+                Authors List
+              </button>
+            </div>
+            <div className="bg-white rounded-b-lg shadow p-6 transition-all duration-300" style={{ minHeight: '200px' }}>
+              <div className={`transition-opacity duration-300 ${listTab === 'book' ? 'opacity-100' : 'opacity-0 absolute pointer-events-none'}`}>
+                {listTab === 'book' && <Books />}
+              </div>
+              <div className={`transition-opacity duration-300 ${listTab === 'author' ? 'opacity-100' : 'opacity-0 absolute pointer-events-none'}`}>
+                {listTab === 'author' && <Authors />}
+              </div>
+            </div>
+          </section>
+          <section className="flex-1">
+            <div className="flex justify-center mb-4">
+              <button
+                className={`px-6 py-2 rounded-t-lg font-semibold transition-all duration-150 focus:outline-none ${tab === 'book' ? 'bg-purple-600 text-white' : 'bg-white text-purple-600 border-b-2 border-purple-600'}`}
+                onClick={() => setTab('book')}
+              >
+                Add Book
+              </button>
+              <button
+                className={`px-6 py-2 rounded-t-lg font-semibold transition-all duration-150 focus:outline-none ${tab === 'author' ? 'bg-purple-600 text-white' : 'bg-white text-purple-600 border-b-2 border-purple-600'}`}
+                onClick={() => setTab('author')}
+              >
+                Add Author
+              </button>
+            </div>
+            <div className="bg-white rounded-b-lg shadow p-6">
+              {tab === 'book' ? <BookForm onCreated={() => {}} /> : <AuthorForm onCreated={() => {}} />}
+            </div>
+          </section>
+        </div>
+      </main>
     </div>
   );
-}
+};
+
+export default App;
