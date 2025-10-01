@@ -16,7 +16,7 @@ export function YearPicker({ value, onChange, minYear = 1900, maxYear }: YearPic
   }
   return (
     <select
-      className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-purple-400"
+      className="border border-gray-700 p-2 rounded focus:ring-2 focus:ring-purple-500 bg-gray-900 text-gray-100 placeholder-gray-400"
       value={value}
       onChange={e => onChange(e.target.value)}
     >

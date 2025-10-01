@@ -52,16 +52,16 @@ export function AuthorForm({ onCreated }: { onCreated: (a: any) => void }) {
 
   return (
     <form
-      className="mb-4 w-full max-w-md mx-auto flex flex-col gap-4"
+      className="mb-4 w-full max-w-md mx-auto flex flex-col gap-4 bg-gray-800 p-6 rounded-lg shadow text-gray-100"
       onSubmit={handleSubmit}
     >
       <div className="flex flex-col gap-2">
-        <label className="font-medium text-gray-700">
+  <label className="font-medium text-gray-200">
           Name<span className="text-red-500">*</span>
         </label>
         <input
-          className={`border p-2 rounded focus:ring-purple-400 ${
-            isNameInvalid ? 'border-red-500' : 'border-gray-300'
+          className={`border p-2 rounded focus:ring-purple-500 bg-gray-900 text-gray-100 placeholder-gray-400 ${
+            isNameInvalid ? 'border-red-500' : 'border-gray-700'
           }`}
           placeholder="Name"
           value={name}
@@ -70,9 +70,9 @@ export function AuthorForm({ onCreated }: { onCreated: (a: any) => void }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="font-medium text-gray-700">Bio</label>
+  <label className="font-medium text-gray-200">Bio</label>
         <input
-          className="border border-gray-300 p-2 rounded focus:ring-purple-400"
+          className="border border-gray-700 p-2 rounded focus:ring-purple-500 bg-gray-900 text-gray-100 placeholder-gray-400"
           placeholder="Bio"
           value={bio}
           onChange={e => setBio(e.target.value)}

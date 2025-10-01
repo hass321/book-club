@@ -38,7 +38,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 flex flex-col items-center px-2 py-4">
+  <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center px-2 py-4">
       <header className="w-full mb-8">
         <div className="max-w-2xl mx-auto">
           <h1 className="text-4xl font-extrabold text-center text-purple-700 drop-shadow mb-2">Book Club</h1>
@@ -64,7 +64,7 @@ const App = () => {
                 Authors List
               </button>
             </div>
-            <div className="bg-white rounded-b-lg shadow p-6 transition-all duration-300" style={{ minHeight: '200px' }}>
+            <div className="bg-gray-800 rounded-b-lg shadow p-6 transition-all duration-300" style={{ minHeight: '200px' }}>
               <div className={`transition-opacity duration-300 ${listTab === 'book' ? 'opacity-100' : 'opacity-0 absolute pointer-events-none'}`}>
                 {listTab === 'book' && <Books books={books} setBooks={setBooks} />}
               </div>
@@ -88,7 +88,7 @@ const App = () => {
                 Add Author
               </button>
             </div>
-            <div className="bg-white rounded-b-lg shadow p-6">
+            <div className="bg-gray-800 rounded-b-lg shadow p-6">
               {tab === 'book' ? <BookForm onCreated={handleBookCreated} /> : <AuthorForm onCreated={handleAuthorCreated} />}
             </div>
           </section>

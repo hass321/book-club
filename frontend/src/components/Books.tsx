@@ -25,7 +25,7 @@ export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) 
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-center mb-4 text-purple-700">Books</h2>
+  <h2 className="text-2xl font-bold text-center mb-4 text-purple-300">Books</h2>
       {loading ? (
         <div className="flex justify-center items-center py-8">
           <span className="inline-block w-10 h-10 border-4 border-purple-300 border-t-purple-600 rounded-full animate-spin"></span>
@@ -37,14 +37,14 @@ export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) 
       ) : (
         <ul className="space-y-4">
           {books.map(b => (
-            <li key={b.id} className="flex flex-col md:flex-row items-center justify-between bg-white rounded-lg shadow p-4 hover:shadow-lg transition-all">
+            <li key={b.id} className="flex flex-col md:flex-row items-center justify-between bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900 rounded-xl shadow-lg p-5 hover:shadow-2xl transition-all border border-purple-900/40">
               <div className="flex-1 text-left">
-                <div className="font-bold text-lg text-purple-800">{b.title}</div>
-                <div className="text-sm text-gray-600">{b.description}</div>
-                <div className="text-xs text-gray-400">Published: {b.published_year || 'N/A'}</div>
+                <div className="font-bold text-lg text-purple-300 drop-shadow-sm tracking-wide">{b.title}</div>
+                <div className="text-sm text-purple-100/80 italic mt-1">{b.description}</div>
+                <div className="text-xs text-purple-400 mt-2">Published: {b.published_year || 'N/A'}</div>
               </div>
               <button
-                className={`ml-4 mt-2 md:mt-0 px-4 py-2 rounded bg-red-500 text-white font-semibold hover:bg-red-600 transition-all ${deletingId === b.id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`ml-4 mt-2 md:mt-0 px-4 py-2 rounded bg-gradient-to-r from-red-700 via-red-600 to-pink-600 text-white font-semibold hover:from-pink-600 hover:to-red-700 shadow transition-all ${deletingId === b.id ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={() => setConfirmId(b.id)}
                 disabled={deletingId === b.id}
               >

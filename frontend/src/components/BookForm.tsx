@@ -31,12 +31,20 @@ export function BookForm({ onCreated }: { onCreated: (b: any) => void }) {
   const isTitleInvalid = submitted && title.trim() === '';
   const isAuthorIdInvalid = submitted && authorId.trim() === '';
 
+  function validateFields() {
+    return {
+      title: title.trim() === '',
+      authorId: authorId.trim() === '',
+    };
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
 
-    if (isTitleInvalid || isAuthorIdInvalid) {
-      setError('Title and Author Name are required');
+    const errors = validateFields();
+    if (errors.title || errors.authorId) {
+      setError('Title and Author Name are required!');
       return;
     }
 
@@ -75,16 +83,16 @@ export function BookForm({ onCreated }: { onCreated: (b: any) => void }) {
 
   return (
     <form
-      className="mb-4 w-full max-w-md mx-auto flex flex-col gap-4"
+      className="mb-4 w-full max-w-md mx-auto flex flex-col gap-4 bg-gray-800 p-6 rounded-lg shadow text-gray-100"
       onSubmit={handleSubmit}
     >
       <div className="flex flex-col gap-2">
-        <label className="font-medium text-gray-700">
+  <label className="font-medium text-gray-200">
           Title<span className="text-red-500">*</span>
         </label>
         <input
-          className={`border p-2 rounded focus:ring-2 focus:ring-purple-400 ${
-            isTitleInvalid ? 'border-red-500' : 'border-gray-300'
+          className={`border p-2 rounded focus:ring-2 focus:ring-purple-500 bg-gray-900 text-gray-100 placeholder-gray-400 ${
+            isTitleInvalid ? 'border-red-500' : 'border-gray-700'
           }`}
           placeholder="Title"
           value={title}
@@ -93,16 +101,16 @@ export function BookForm({ onCreated }: { onCreated: (b: any) => void }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="font-medium text-gray-700">
+  <label className="font-medium text-gray-200">
           Author Name<span className="text-red-500">*</span>
         </label>
         {authorsLoading ? (
-          <div className="text-gray-500 text-sm">Loading authors...</div>
+          <div className="text-gray-400 text-sm">Loading authors...</div>
         ) : authorsError ? (
-          <div className="text-red-500 text-sm">{authorsError}</div>
+          <div className="text-red-400 text-sm">{authorsError}</div>
         ) : (
           <select
-            className={`border p-2 rounded focus:ring-2 focus:ring-purple-400 ${isAuthorIdInvalid ? 'border-red-500' : 'border-gray-300'}`}
+            className={`border p-2 rounded focus:ring-2 focus:ring-purple-500 bg-gray-900 text-gray-100 placeholder-gray-400 ${isAuthorIdInvalid ? 'border-red-500' : 'border-gray-700'}`}
             value={authorId}
             onChange={e => setAuthorId(e.target.value)}
           >
@@ -115,9 +123,9 @@ export function BookForm({ onCreated }: { onCreated: (b: any) => void }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="font-medium text-gray-700">Description</label>
+  <label className="font-medium text-gray-200">Description</label>
         <input
-          className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-purple-400"
+          className="border border-gray-700 p-2 rounded focus:ring-2 focus:ring-purple-500 bg-gray-900 text-gray-100 placeholder-gray-400"
           placeholder="Description"
           value={description}
           onChange={e => setDescription(e.target.value)}
@@ -125,7 +133,7 @@ export function BookForm({ onCreated }: { onCreated: (b: any) => void }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="font-medium text-gray-700">Published Year</label>
+  <label className="font-medium text-gray-200">Published Year</label>
         <YearPicker value={publishedYear} onChange={setPublishedYear} minYear={1900} />
       </div>
 
