@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { API_BASE_URL } from '../api';
+import { deleteAuthor, updateAuthor, searchAuthors } from '../service/api';
 
 export function Authors({ authors, setAuthors }: { authors: any[]; setAuthors: (a: any[]) => void }) {
   const [loading, setLoading] = useState(true);
@@ -22,8 +22,7 @@ export function Authors({ authors, setAuthors }: { authors: any[]; setAuthors: (
   const handleDelete = async (id: number) => {
     setDeletingId(id);
     try {
-  const res = await fetch(`${API_BASE_URL}/authors/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Delete failed');
+      await deleteAuthor(id);
       setAuthors(authors.filter((a: {id:number}) => a.id !== id));
     } catch {
       alert('Failed to delete author');
@@ -47,16 +46,11 @@ export function Authors({ authors, setAuthors }: { authors: any[]; setAuthors: (
     setEditLoading(true);
     setEditError(null);
     try {
-      const res = await fetch(`${API_BASE_URL}/authors/${editingId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: editData.name,
-          bio: editData.bio,
-        }),
+      if (editingId === null) throw new Error('No author selected');
+      const updated = await updateAuthor(editingId, {
+        name: editData.name,
+        bio: editData.bio,
       });
-      if (!res.ok) throw new Error('Failed to update author');
-      const updated = await res.json();
       setAuthors(authors.map(a => a.id === editingId ? updated : a));
       setEditingId(null);
       setEditData({});
@@ -87,8 +81,7 @@ export function Authors({ authors, setAuthors }: { authors: any[]; setAuthors: (
     const controller = new AbortController();
     setSearching(true);
     const timeout = setTimeout(() => {
-  fetch(`${API_BASE_URL}/authors${search ? `?search=${encodeURIComponent(search)}` : ''}`, { signal: controller.signal })
-        .then(res => res.json())
+      searchAuthors(search, controller.signal)
         .then(setAuthors)
         .catch(() => {})
         .finally(() => setSearching(false));

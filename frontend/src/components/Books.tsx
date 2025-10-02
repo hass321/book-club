@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { YearPicker } from './YearPicker';
-import { API_BASE_URL } from '../api';
+import { fetchAuthors, deleteBook, updateBook, searchBooks } from '../service';
 
 export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) => void }) {
   const [loading, setLoading] = useState(true);
@@ -30,8 +30,7 @@ export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) 
   useEffect(() => {
     if (showEditModal && editingId !== null) {
       setAuthorsLoading(true);
-  fetch(`${API_BASE_URL}/authors`)
-        .then(res => res.json())
+      fetchAuthors()
         .then(setAuthors)
         .catch(() => setAuthorsError('Failed to load authors'))
         .finally(() => setAuthorsLoading(false));
@@ -45,9 +44,8 @@ export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) 
   const handleDelete = async (id: number) => {
     setDeletingId(id);
     try {
-  const res = await fetch(`${API_BASE_URL}/books/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Delete failed');
-      setBooks(books.filter(b => b.id !== id));
+  await deleteBook(id);
+  setBooks(books.filter(b => b.id !== id));
     } catch {
       alert('Failed to delete book');
     } finally {
@@ -62,18 +60,13 @@ export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) 
     setEditLoading(true);
     setEditError(null);
     try {
-      const res = await fetch(`${API_BASE_URL}/books/${editingId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: editData.title,
-          authorId: Number(editData.authorId),
-          description: editData.description,
-          publishedYear: editData.publishedYear ? Number(editData.publishedYear) : undefined,
-        }),
+      if (editingId === null) throw new Error('No book selected for editing');
+      const updated = await updateBook(editingId, {
+        title: editData.title,
+        authorId: Number(editData.authorId),
+        description: editData.description,
+        publishedYear: editData.publishedYear ? Number(editData.publishedYear) : undefined,
       });
-      if (!res.ok) throw new Error('Failed to update book');
-      const updated = await res.json();
       setBooks(books.map(b => b.id === editingId ? updated : b));
       setEditingId(null);
       setEditData({});
@@ -106,8 +99,7 @@ export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) 
     const controller = new AbortController();
     setSearching(true);
     const timeout = setTimeout(() => {
-  fetch(`${API_BASE_URL}/books${search ? `?search=${encodeURIComponent(search)}` : ''}`, { signal: controller.signal })
-        .then(res => res.json())
+      searchBooks(search, controller.signal)
         .then(setBooks)
         .catch(() => {})
         .finally(() => setSearching(false));

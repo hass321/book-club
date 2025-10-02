@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { API_BASE_URL } from '../api';
+import { createAuthor } from '../service/api';
 
 function Spinner() {
   return (
@@ -29,15 +29,7 @@ export function AuthorForm({ onCreated }: { onCreated: (a: any) => void }) {
     setError(null);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/authors`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, bio }),
-      });
-
-      if (!res.ok) throw new Error('Failed to create author');
-
-      const newAuthor = await res.json();
+      const newAuthor = await createAuthor({ name, bio });
       onCreated(newAuthor);
 
       // reset form
