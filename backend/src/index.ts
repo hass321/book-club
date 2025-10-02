@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import corsPlugin from './plugins/cors';
 import { authorRoutes } from './routes/authors';
 import { bookRoutes } from './routes/books';
 import fastifyStatic from '@fastify/static';
@@ -6,6 +7,7 @@ import path from 'path';
 import fs from 'fs';
 
 const app = Fastify({ logger: true });
+app.register(corsPlugin);
 
 // Set Referrer-Policy header for all responses
 app.addHook('onSend', (request, reply, payload, done) => {
