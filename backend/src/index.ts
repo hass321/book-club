@@ -1,11 +1,35 @@
 import Fastify from 'fastify';
 import { authorRoutes } from './routes/authors';
 import { bookRoutes } from './routes/books';
+import fastifyStatic from '@fastify/static';
+import path from 'path';
+import fs from 'fs';
 
 const app = Fastify({ logger: true });
 
 app.register(authorRoutes, { prefix: '/authors' });
 app.register(bookRoutes, { prefix: '/books' });
+
+app.register(fastifyStatic, {
+  root: path.join(__dirname, '../dist'),
+  prefix: '/',
+  decorateReply: false,
+});
+
+app.setNotFoundHandler((req, reply) => {
+  if (
+    req.raw.url &&
+    !req.raw.url.startsWith('/api') &&
+    !req.raw.url.startsWith('/books') &&
+    !req.raw.url.startsWith('/authors') &&
+    !req.raw.url.startsWith('/health')
+  ) {
+    return reply.type('text/html').send(
+      fs.readFileSync(path.join(__dirname, '../dist/index.html'))
+    );
+  }
+  reply.status(404).send({ error: 'Not found' });
+});
 
 app.get('/health', async () => ({ status: 'ok' }));
 
@@ -18,6 +42,6 @@ const start = async () => {
     app.log.error(err);
     process.exit(1);
   }
-};
+}
 
 start();

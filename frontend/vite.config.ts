@@ -5,8 +5,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/authors': 'http://localhost:4000',
-      '/books': 'http://localhost:4000',
+      '/authors': 'https://bookclub.up.railway.app',
+      '/books': 'https://bookclub.up.railway.app',
     },
   },
 });
