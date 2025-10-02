@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { YearPicker } from './YearPicker';
+import { API_BASE_URL } from '../api';
 
 function Spinner() {
   return (
@@ -21,7 +22,7 @@ export function BookForm({ onCreated }: { onCreated: (b: any) => void }) {
 
   useEffect(() => {
     setAuthorsLoading(true);
-    fetch('/authors')
+  fetch(`${API_BASE_URL}/authors`)
       .then(res => res.json())
       .then(setAuthors)
       .catch(() => setAuthorsError('Failed to load authors'))
@@ -52,7 +53,7 @@ export function BookForm({ onCreated }: { onCreated: (b: any) => void }) {
     setError(null);
 
     try {
-      const res = await fetch('/books', {
+      const res = await fetch(`${API_BASE_URL}/books`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { API_BASE_URL } from '../api';
 
 export function Authors({ authors, setAuthors }: { authors: any[]; setAuthors: (a: any[]) => void }) {
   const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ export function Authors({ authors, setAuthors }: { authors: any[]; setAuthors: (
   const handleDelete = async (id: number) => {
     setDeletingId(id);
     try {
-      const res = await fetch(`/authors/${id}`, { method: 'DELETE' });
+  const res = await fetch(`${API_BASE_URL}/authors/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Delete failed');
       setAuthors(authors.filter((a: {id:number}) => a.id !== id));
     } catch {
@@ -46,7 +47,7 @@ export function Authors({ authors, setAuthors }: { authors: any[]; setAuthors: (
     setEditLoading(true);
     setEditError(null);
     try {
-      const res = await fetch(`/authors/${editingId}`, {
+      const res = await fetch(`${API_BASE_URL}/authors/${editingId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -86,7 +87,7 @@ export function Authors({ authors, setAuthors }: { authors: any[]; setAuthors: (
     const controller = new AbortController();
     setSearching(true);
     const timeout = setTimeout(() => {
-      fetch(`/authors${search ? `?search=${encodeURIComponent(search)}` : ''}`, { signal: controller.signal })
+  fetch(`${API_BASE_URL}/authors${search ? `?search=${encodeURIComponent(search)}` : ''}`, { signal: controller.signal })
         .then(res => res.json())
         .then(setAuthors)
         .catch(() => {})

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { YearPicker } from './YearPicker';
+import { API_BASE_URL } from '../api';
 
 export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) => void }) {
   const [loading, setLoading] = useState(true);
@@ -29,7 +30,7 @@ export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) 
   useEffect(() => {
     if (showEditModal && editingId !== null) {
       setAuthorsLoading(true);
-      fetch('/authors')
+  fetch(`${API_BASE_URL}/authors`)
         .then(res => res.json())
         .then(setAuthors)
         .catch(() => setAuthorsError('Failed to load authors'))
@@ -44,7 +45,7 @@ export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) 
   const handleDelete = async (id: number) => {
     setDeletingId(id);
     try {
-      const res = await fetch(`/books/${id}`, { method: 'DELETE' });
+  const res = await fetch(`${API_BASE_URL}/books/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Delete failed');
       setBooks(books.filter(b => b.id !== id));
     } catch {
@@ -61,7 +62,7 @@ export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) 
     setEditLoading(true);
     setEditError(null);
     try {
-      const res = await fetch(`/books/${editingId}`, {
+      const res = await fetch(`${API_BASE_URL}/books/${editingId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -105,7 +106,7 @@ export function Books({ books, setBooks }: { books: any[]; setBooks: (b: any[]) 
     const controller = new AbortController();
     setSearching(true);
     const timeout = setTimeout(() => {
-      fetch(`/books${search ? `?search=${encodeURIComponent(search)}` : ''}`, { signal: controller.signal })
+  fetch(`${API_BASE_URL}/books${search ? `?search=${encodeURIComponent(search)}` : ''}`, { signal: controller.signal })
         .then(res => res.json())
         .then(setBooks)
         .catch(() => {})

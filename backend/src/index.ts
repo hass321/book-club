@@ -7,6 +7,12 @@ import fs from 'fs';
 
 const app = Fastify({ logger: true });
 
+// Set Referrer-Policy header for all responses
+app.addHook('onSend', (request, reply, payload, done) => {
+  reply.header('Referrer-Policy', 'strict-origin-when-cross-origin');
+  done();
+});
+
 app.register(authorRoutes, { prefix: '/authors' });
 app.register(bookRoutes, { prefix: '/books' });
 

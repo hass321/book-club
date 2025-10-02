@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from './api';
 import { Authors } from './components/Authors';
 import { Books } from './components/Books';
 import { BookForm } from './components/BookForm';
@@ -14,16 +15,20 @@ const App = () => {
 
   useEffect(() => {
     if (!booksLoaded) {
-      fetch('/books')
-        .then(res => res.json())
-        .then(setBooks)
-        .finally(() => setBooksLoaded(true));
+  fetch(`${API_BASE_URL}/books`, {
+  credentials: 'include',
+  })
+    .then(res => res.json())
+    .then(setBooks)
+    .finally(() => setBooksLoaded(true));
     }
     if (!authorsLoaded) {
-      fetch('/authors')
-        .then(res => res.json())
-        .then(setAuthors)
-        .finally(() => setAuthorsLoaded(true));
+  fetch(`${API_BASE_URL}/authors`, {
+  credentials: 'include',
+  })
+    .then(res => res.json())
+    .then(setAuthors)
+    .finally(() => setAuthorsLoaded(true));
     }
   }, [booksLoaded, authorsLoaded]);
 

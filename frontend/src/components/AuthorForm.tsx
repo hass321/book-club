@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../api';
 
 function Spinner() {
   return (
@@ -28,7 +29,7 @@ export function AuthorForm({ onCreated }: { onCreated: (a: any) => void }) {
     setError(null);
 
     try {
-      const res = await fetch('/authors', {
+      const res = await fetch(`${API_BASE_URL}/authors`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, bio }),
