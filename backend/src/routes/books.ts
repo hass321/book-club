@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+
+import { bookService } from '../service/bookService';
 
 const bookSchema = z.object({
   title: z.string().min(1),
@@ -13,23 +13,12 @@ const bookSchema = z.object({
 export async function bookRoutes(app: FastifyInstance) {
   app.get('/', async (req) => {
     const search = (req.query as any).search?.toString().trim();
-    if (search) {
-      return prisma.book.findMany({
-        where: {
-          OR: [
-            { title: { contains: search, mode: 'insensitive' } },
-            { description: { contains: search, mode: 'insensitive' } },
-          ],
-        },
-        orderBy: { created_at: 'desc' },
-      });
-    }
-    return prisma.book.findMany({ orderBy: { created_at: 'desc' } });
+    return bookService.findAll(search);
   });
 
   app.get('/:id', async (req, res) => {
     const id = Number((req.params as any).id);
-    const book = await prisma.book.findUnique({ where: { id } });
+    const book = await bookService.findById(id);
     if (!book) return res.status(404).send({ error: 'Book not found' });
     return book;
   });
@@ -37,12 +26,12 @@ export async function bookRoutes(app: FastifyInstance) {
   app.post('/', async (req, res) => {
     const parse = bookSchema.safeParse(req.body);
     if (!parse.success) return res.status(400).send({ error: parse.error.errors });
-    const book = await prisma.book.create({ data: {
+    const book = await bookService.create({
       title: parse.data.title,
       authorId: parse.data.authorId,
       description: parse.data.description,
       published_year: parse.data.publishedYear,
-    }});
+    });
     return book;
   });
 
@@ -50,18 +39,18 @@ export async function bookRoutes(app: FastifyInstance) {
     const id = Number((req.params as any).id);
     const parse = bookSchema.safeParse(req.body);
     if (!parse.success) return res.status(400).send({ error: parse.error.errors });
-    const book = await prisma.book.update({ where: { id }, data: {
+    const book = await bookService.update(id, {
       title: parse.data.title,
       authorId: parse.data.authorId,
       description: parse.data.description,
       published_year: parse.data.publishedYear,
-    }});
+    });
     return book;
   });
 
   app.delete('/:id', async (req, res) => {
     const id = Number((req.params as any).id);
-    await prisma.book.delete({ where: { id } });
+    await bookService.delete(id);
     return { success: true };
   });
 }

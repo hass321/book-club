@@ -2,26 +2,41 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+  await prisma.book.deleteMany();
+  await prisma.author.deleteMany();
+
   const author1 = await prisma.author.create({
-    data: { name: 'Jane Austen', bio: 'English novelist.' }
+    data: { name: 'Colson Whitehead', bio: 'American novelist, Pulitzer Prize winner.' }
   });
   const author2 = await prisma.author.create({
-    data: { name: 'George Orwell', bio: 'English novelist, essayist.' }
+    data: { name: 'Suzanne Collins', bio: 'American television writer and author.' }
   });
+  const author3 = await prisma.author.create({
+    data: { name: 'Jhumpa Lahiri', bio: 'Indian-American author and Pulitzer Prize winner.' }
+  });
+
   await prisma.book.create({
     data: {
-      title: 'Pride and Prejudice',
+      title: 'The Underground Railroad',
       authorId: author1.id,
-      description: 'Classic novel of manners.',
-      published_year: 1813
+      description: 'Pulitzer Prize-winning novel about a slave’s escape from a Georgia plantation.',
+      published_year: 2016
     }
   });
   await prisma.book.create({
     data: {
-      title: '1984',
+      title: 'The Ballad of Songbirds and Snakes',
       authorId: author2.id,
-      description: 'Dystopian social science fiction novel.',
-      published_year: 1949
+      description: 'Prequel to The Hunger Games trilogy.',
+      published_year: 2020
+    }
+  });
+  await prisma.book.create({
+    data: {
+      title: 'Interpreter of Maladies',
+      authorId: author3.id,
+      description: 'Pulitzer Prize-winning collection of short stories.',
+      published_year: 2000
     }
   });
 }
